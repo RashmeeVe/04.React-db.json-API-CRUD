@@ -25,7 +25,9 @@ class AddUser extends React.Component {
     super(props);
 
     this.state = {
-      errorEmployeeName: "",
+     errorEmployeeName: "",
+      errorEmail: "",
+      errorPhone: "",
       name: "",
       username: "",
       email: "",
@@ -47,12 +49,20 @@ class AddUser extends React.Component {
 
   handleFormEntries = (event) => {
     const { name, value } = event.target;
-    let errorEmployeeName;
+       let errorEmployeeName, errorEmail, errorPhone;
     if (name === "name" && !value.match(/^[a-zA-Z ]+$/)) {
       errorEmployeeName = "Enter Characters Only";
     }
 
-    this.setState({ [name]: value, errorEmployeeName });
+    if (name === "email" && !value.match(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/)) {
+      errorEmail = "Enter Valid Email ID";
+    }
+
+    if (name === "phone" && value.match(/^[a-zA-Z ]+$/)) {
+      errorPhone = "Enter Numeric Value Only";
+    }
+
+    this.setState({ [name]: value, errorEmployeeName, errorEmail, errorPhone });
     return true;
   };
 
@@ -65,7 +75,9 @@ class AddUser extends React.Component {
       email.trim() === "" ||
       phone.trim() === "" ||
       website.trim() === "" ||
-      !name.match(/^[a-zA-Z ]+$/)
+       !name.match(/^[a-zA-Z ]+$/) ||
+      !email.match(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/) ||
+      phone.match(/^[a-zA-Z ]+$/)
     ) {
       return;
     } else {
@@ -90,7 +102,9 @@ class AddUser extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { errorEmployeeName, name, username, email, phone, website } =
+    const {  errorEmployeeName,
+      errorEmail,
+      errorPhone, name, username, email, phone, website } =
       this.state;
 
     // console.log(errorEmployeeName, name, username, email, phone, website);
@@ -108,8 +122,8 @@ class AddUser extends React.Component {
                 multiline
                 value={name}
                 onChange={this.handleFormEntries}
-                label="Employee Name"
-                error={errorEmployeeName ? true : false}
+                 error={errorEmployeeName ? true : false}
+                label={errorEmployeeName ? errorEmployeeName : "Employee Name"}
               />
             </div>
 
@@ -133,7 +147,9 @@ class AddUser extends React.Component {
                 className={classes.CreateUpdateUserFormFields}
                 value={email}
                 onChange={this.handleFormEntries}
-                label="Employee Email"
+               // label="Employee Email"
+               error={errorEmail ? true : false}
+                label={errorEmail ? errorEmail : "Employee Email"}
               />
             </div>
 
@@ -145,7 +161,9 @@ class AddUser extends React.Component {
                 className={classes.CreateUpdateUserFormFields}
                 value={phone}
                 onChange={this.handleFormEntries}
-                label="Phone Number"
+               // label="Phone Number"
+                 error={errorPhone ? true : false}
+                label={errorPhone ? errorPhone : "Phone Number"}
               />
             </div>
 
